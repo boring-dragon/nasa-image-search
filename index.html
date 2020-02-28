@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.65.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <title>Nasa Image Search</title>
+</head>
+
+<body>
+
+    <div class="container mx-auto">
+
+        <h1 class="font-sans text-lg text-gray-800 text-center font-bold py-8">Nasa Image Search <a class="text-center" style="color:burlywood;" href="https://jinas.me">@jinas</a></h1>
+        
+        <div id="app">
+
+            <div class="justify-center float-none">
+                <input type="text" v-model="query">
+                <form class="max-w">
+                    <div class="flex border-b border-b-2 border-teal-500 py-8 ">
+                        <input
+                            class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                            type="text" placeholder="Write something to search">
+                    </div>
+                    <div class="py-4">
+                        <input class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                            type="submit" @click.prevent="getPics">
+
+                    </div>
+
+                </form>
+
+                <div v-for="result in results" class="mb-5">
+                    <div class="rounded overflow-hidden shadow-lg">
+                        <img class="w-full" :src="result.links[0].href">
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">{{result.data[0].title}}</div>
+                            <p class="text-gray-700 text-base">
+                                {{result.data[0].description}}
+                            </p>
+                        </div>
+                        <div class="px-6 py-4" v-for="keyword in result.data[0].keywords">
+                            <span
+                                class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{{keyword}}</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script>
+            new Vue({
+                el: "#app",
+                data: {
+                    results: [],
+                    query: ""
+
+                },
+
+                methods: {
+                    getPics: function () {
+                        fetch(`https://images-api.nasa.gov/search?q=${this.query}&media_type=image`, )
+                            .then((response) => {
+                                return response.json()
+                            })
+                            .then((parsedJson) => {
+                                this.results = parsedJson["collection"]["items"];
+                            })
+                    }
+                }
+
+
+
+
+            });
+        </script>
+
+</body>
+
+</html>
